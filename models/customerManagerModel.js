@@ -23,7 +23,7 @@ const customerSchema = new mongoose.Schema({
         minLength: [3, `Name should be atleast 3 charector!`],
         maxLength: [20, `Name should less then 20 charector!`],
     },
-    active: { type: String, default: false },
+    active: { type: Boolean, default: false },
     address: {
         type: String,
         default: '',

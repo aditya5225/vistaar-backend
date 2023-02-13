@@ -2,12 +2,23 @@ const customerManagerDb = require('../models/customerManagerModel');
 
 const fetchCustomersFun = async (req, res) => {
     let response = {};
-    const limitData = req.query.limit ? req.query.limit : 10;
-    const skipData = req.query.skip ? (req.query.skip - 1) * limitData : 0;
 
     try {
-        const dataCount = await customerManagerDb.count();
-        const customersData = await customerManagerDb.find({}).limit(limitData).skip(skipData);
+        const limitData = req.query.limit ? req.query.limit : 10;
+        const skipData = req.query.skip ? (req.query.skip - 1) * limitData : 0;
+        let findQuery = {}
+
+        if (req.query.active != undefined) {
+            if (req.query.active.trim().toLowerCase() == 'true') {
+                findQuery.active = true
+            }
+            else if (req.query.active.trim().toLowerCase() == 'false') {
+                findQuery.active = false
+            }
+        }
+
+        const customersData = await customerManagerDb.find(findQuery).limit(limitData).skip(skipData);
+        const dataCount = await customerManagerDb.find(findQuery).count();
 
         response = {
             error: false,
@@ -24,7 +35,7 @@ const fetchCustomersFun = async (req, res) => {
             message: err
         }
     }
-    
+
     return response;
 }
 
