@@ -10,11 +10,12 @@ const transactionSchema = new mongoose.Schema({
         maxLength: [20, `Account id should less then 20 charector!`],
         validate: {
             validator: async (value) => {
-                const customerCount = await mongoose.models.customer.count({ username: value });
-                return !customerCount;
+                const transactionsCount = await mongoose.models.transaction.count({ account_id: value });
+                return !transactionsCount;
             },
             message: props => `${props.value} account id already exists`
         },
+        ref: 'account'
     },
     transaction_count: { type: Number, default: 0 },
     bucket_start_date: {

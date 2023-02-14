@@ -1,15 +1,18 @@
-const transactionsModelDb = require('../models/transactionsModel');
+const transactionsDb = require('../models/transactionsModel');
+const customerManagerDb = require('../models/customerManagerModel');
 
 const transactionsFun = async (req, res) => {
     let response = {};
 
     try {
         if (req.query && req.query.account_id) {
-            const transactionsData = await transactionsModelDb.findOne({ account_id: req.query.account_id.trim() });
+            const transactionsData = await transactionsDb.findOne({ account_id: req.query.account_id.trim() });
+            const customerData = await customerManagerDb.findOne({ account_id: req.query.account_id.trim() });
 
             response = {
                 error: false,
                 result: {
+                    customerData,
                     transactionsData,
                     message: `Data fetched successfully!`
                 }

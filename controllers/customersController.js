@@ -4,8 +4,8 @@ const fetchCustomersFun = async (req, res) => {
     let response = {};
 
     try {
-        const limitData = req.query.limit ? req.query.limit : 10;
-        const skipData = req.query.skip ? (req.query.skip - 1) * limitData : 0;
+        const limitData = req.query.limit && req.query.limit >= 0 ? req.query.limit : 10;
+        const skipData = req.query.skip && req.query.skip >= 0 ? (req.query.skip - 1) * limitData : 0;
         let findQuery = {}
 
         if (req.query.active != undefined) {
@@ -17,7 +17,7 @@ const fetchCustomersFun = async (req, res) => {
             }
         }
 
-        const customersData = await customerManagerDb.find(findQuery).limit(limitData).skip(skipData);
+        const customersData = await customerManagerDb.find(findQuery).skip(skipData).limit(limitData);
         const dataCount = await customerManagerDb.find(findQuery).count();
 
         response = {
